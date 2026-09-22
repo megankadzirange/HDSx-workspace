@@ -1,6 +1,6 @@
 ---
 title: "My First Report"
-author: "Your Name"
+author: "Megan Kadzirange"
 format:
   html:
     embed-resources: true
@@ -36,8 +36,20 @@ hist(patients$age,
 
 ## Your turn
 
-- Add a sentence here describing what you notice in the chart.
-- Render again and check that both your sentence and the chart appear.
+## My Notes
+
+I noticed that keeping your writing clear and concise helps reduce messiness when 
+looking back at your work.
+I also noticed the colour coding helps draw your attention to what is most important and to differentiate diffent parts of your code and writing.
+Finally I learnt how to **bold** items in quarto 
+
+## My R Code
+
+```{r}
+patients <- read.csv("data/patients.csv")
+tail(patients)
+```
+
 
 When you are happy with the result, **commit and sync** your work (the Week 2
 course page walks you through this), then submit your repository link on Canvas.
