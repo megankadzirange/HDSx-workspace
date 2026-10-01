@@ -1,0 +1,116 @@
+---
+title: "Assignment 2 Starter Analysis"
+format: html
+---
+
+## Setup
+
+```{r}
+#| message: false
+#| warning: false
+library(tidyverse)  # AI-EDIT(2026-06-23): tidyverse-default — consolidated core library() calls into library(tidyverse)
+```
+
+## Load Data
+
+```{r}
+nhanes <- read_csv("examples/nhanes-equity/data/nhanes_equity_v6.csv", show_col_types = FALSE)
+```
+
+## Inspect
+
+```{r}
+dim(nhanes)
+names(nhanes)
+glimpse(nhanes)
+colSums(is.na(nhanes))
+```
+
+## Patients Aged 20 to 30
+
+```{r}
+patients_20_30 <- nhanes |>
+  filter(Age >= 20, Age <= 30) |>
+  select(Gender, Age, BMI) |>
+  group_by(Gender)
+
+patients_20_30
+```
+
+## Summarize
+
+Replace this example with your own summary if you choose a different question.
+
+```{r}
+bmi_summary <- nhanes |>
+  filter(!is.na(BMI), !is.na(IncomeGroup)) |>
+  group_by(IncomeGroup) |>
+  summarise(
+    n = n(),
+    mean_bmi = mean(BMI),
+    .groups = "drop"
+  )
+
+bmi_summary
+```
+
+## Function
+
+```{r}
+mean_with_n <- function(x) {
+  tibble(
+    n = sum(!is.na(x)),
+    mean = mean(x, na.rm = TRUE)
+  )
+}
+
+mean_with_n(nhanes$BMI)
+
+standard_deviation <- function(x) {
+  sd(x, na.rm = TRUE)
+}
+
+standard_deviation(nhanes$BMI)
+```
+
+## Save Output
+
+```{r}
+dir.create("assignments/assignment02-r-with-ai/submission/output", recursive = TRUE, showWarnings = FALSE)
+write_csv(bmi_summary, "assignments/assignment02-r-with-ai/submission/output/summary_table.csv")
+```
+
+## AI Audit Note
+
+Add comments explaining which parts were drafted or debugged with AI and how you verified the result.
+
+#HW Assignment 2
+```{r}
+library(readr)
+library(dplyr)
+```
+
+I loaded the readr and dplyr libraries to read the CSV file and manipulate the data.
+
+```{r}
+nhanes <- read_csv("examples/nhanes-equity/data/nhanes_equity_v6.csv", show_col_types = FALSE)
+```
+
+Next I loaded the NHANES dataset from the specified CSV file.
+
+```{r}
+dim(nhanes)
+names(nhanes)
+glimpse(nhanes)
+summary(nhanes)
+colSums(is.na(nhanes))
+```
+
+Next I inspected my data to understand its structure, dimensions and missingness.
+
+I then created a new data frame called patients_20_30 that filters the NHANES dataset for patients aged 20 to 30, selects the Gender, Age, and BMI columns, and groups the data by Gender.
+
+I then created a custom standard deviation function.
+
+#AI Audit Note: 
+I used AI to help me write the code for loading the data, inspecting it, filtering it, and summarizing it. I verified the results by checking the output of each step and ensuring that the data was correctly filtered and summarized. I also cross checked it with the textbook notes. I also checked the output of the custom standard deviation function to ensure it was working correctly.
