@@ -1,0 +1,76 @@
+---
+title: "visualization-audit.qmd"
+format: html
+---
+
+library(readr)
+library(dplyr)
+library(ggplot2)
+
+candidate_paths <- c(
+  "C:/Users/analyst/Desktop/nhanes_equity_v6.csv",
+  "examples/nhanes-equity/data/nhanes_equity_v6.csv",
+  "../../../examples/nhanes-equity/data/nhanes_equity_v6.csv"
+)
+
+data_path <- candidate_paths[file.exists(candidate_paths)][1]
+if (is.na(data_path)) {
+  stop("Could not find nhanes_equity_v6.csv")
+}
+
+nhanes <- read_csv(data_path, show_col_types = FALSE)
+
+cycle_levels <- sort(unique(nhanes$Cycle))
+endpoint_cycles <- c(cycle_levels[1], cycle_levels[length(cycle_levels)])
+
+# Select NHANES cycles approximately every 5 years
+cycle_levels <- sort(unique(as.character(nhanes$Cycle)))
+
+selected_cycles <- cycle_levels[
+  seq(1, length(cycle_levels), by = 2)
+]
+
+# Calculate mean BMI for each income group and cycle
+improved_summary <- nhanes |>
+  filter(
+    !is.na(BMI),
+    !is.na(IncomeGroup),
+    Cycle %in% selected_cycles
+  ) |>
+  group_by(Cycle, IncomeGroup) |>
+  summarise(
+    mean_bmi = mean(BMI),
+    .groups = "drop"
+  )
+
+# Create improved scatter plot
+improved_plot <- ggplot(
+  improved_summary,
+  aes(x = Cycle, y = mean_bmi, color = IncomeGroup)
+) +
+  geom_point(size = 3) +
+  scale_x_discrete(limits = selected_cycles) +
+  scale_y_continuous(limits = c(20, 30)) +
+  labs(
+    title = "Trends in Mean BMI Among U.S. Adults by Income Group",
+    subtitle = "Mean BMI across selected NHANES cycles",
+    x = "NHANES cycle",
+    y = "Mean BMI (kg/m²)",
+    color = "Income group"
+  ) +
+  theme_minimal(base_size = 12)+
+  theme(
+    axis.text.x = element_text(angle = 45, hjust = 1)
+  )
+
+print(improved_plot)
+
+ggsave(
+  "assignments/assignment05-visualization/submission/corrected-plot.png",
+  plot = last_plot(),
+  width = 7,
+  height = 5
+)
+
+#What I revised and why
+I revised the graph by including more NHANES cycles to better illustrate changes in mean BMI across income groups over time. I replaced the dashed lines with a scatter plot to avoid implying continuous trends between observations and adjusted the x-axis labels to improve readability. I also expanded the y-axis range to avoid exaggerating differences in BMI between income groups. Finally, I revised the title to use neutral language and avoid making unsupported causal claims.
