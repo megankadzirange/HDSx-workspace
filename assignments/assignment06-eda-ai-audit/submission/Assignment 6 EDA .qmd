@@ -1,0 +1,91 @@
+---
+title: "assignment06-eda-ai-audit"
+editor: visual
+---
+
+## Quarto
+
+Quarto enables you to weave together content and executable code into a finished document. To learn more about Quarto see <https://quarto.org>.
+
+## Running Code
+
+When you click the **Render** button a document will be generated that includes both content and the output of embedded code. You can embed code like this:
+
+```{r}
+library(tidyverse) # AI-EDIT(2026-06-23): tidyverse-default — consolidated core library() calls into library(tidyverse)
+library(knitr)
+
+candidate_paths <- c(
+  "C:/Users/analyst/Documents/nhanes_equity_v6.csv",
+  "examples/nhanes-equity/data/nhanes_equity_v6.csv",
+  "../../examples/nhanes-equity/data/nhanes_equity_v6.csv",
+  "../../../examples/nhanes-equity/data/nhanes_equity_v6.csv"
+)
+
+data_path <- candidate_paths[file.exists(candidate_paths)][1]
+if (is.na(data_path)) {
+  stop("Could not find nhanes_equity_v6.csv")
+}
+
+# Data downloaded fresh from the NHANES website last week.
+nhanes <- read_csv(data_path, show_col_types = FALSE)
+
+```
+
+You can add options to executable code like this
+
+```{r}
+#Defining this analysis cohort as restricted to adults aged 20 to 80. This keeps the analysis focused on adult BMI summaries and avoids mixing children, adolescents, and the oldest age-coded records into one table
+
+analysis_df <- nhanes |>
+  filter(Age >= 20, Age <= 80)
+
+cohort_counts <- tibble(
+  step = c("Prepared CSV rows", "Rows after age 20-80 restriction"),
+  n = c(nrow(nhanes), nrow(analysis_df))
+)
+
+kable(cohort_counts)
+```
+
+The `echo: false` option disables the printing of code (only output is displayed).
+
+```{r}
+#Missingness Table for key variables 
+key_vars <- c("BMI", "Age", "IncomeGroup", "Gender", "Race", "Cycle")
+
+missingness <- tibble(variable = key_vars) |>
+  mutate(
+    missing_n = vapply(analysis_df[key_vars], function(x) sum(is.na(x)), numeric(1)),
+    missing_percent = round(100 * missing_n / nrow(analysis_df), 1)
+  )
+
+kable(missingness)
+```
+
+```{r}
+#Produce Table 1-style Summary by Income Group
+mean_sd <- function(x) {
+  sprintf("%.1f (%.1f)", mean(x, na.rm = TRUE), sd(x, na.rm = TRUE))
+}
+
+table1 <- analysis_df |>
+  filter(!is.na(IncomeGroup)) |>
+  group_by(IncomeGroup) |>
+  summarise(
+    N = n(),
+    `BMI, mean (SD)` = mean_sd(BMI),
+    `Age, mean (SD)` = mean_sd(Age),
+    .groups = "drop"
+  )
+
+kable(table1)
+```
+
+Methods Note: We used the prepared NHANES Health Equity classroom CSV snapshot. The analysis cohort included records with age 20-80. We summarized BMI and age by income group using unweighted descriptive statistics. Missing values were checked before summarizing. These summaries describe the prepared class dataset and should not be interpreted as causal effects or population estimates.
+
+```{r}
+
+
+
+```
