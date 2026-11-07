@@ -1,0 +1,3 @@
+- new branch was created for the group project on the group repository
+- no AI was used in this process
+- I am ready for M0
