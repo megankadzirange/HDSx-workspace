@@ -1,0 +1,3 @@
+- The data source is the prepared NHANES Health Equity classroom CSV. It is strictly for classroom use purposes only and may not be used beyond this
+- The dashboard renders aggregate summaries only
+- I did not share row-level records with any external AI tool.
