@@ -1,0 +1,3 @@
+- I used filter to select the chosen cohort and income group; ggplot to graph the line graph and kabble to create the dashboard summary.
+- The income group selected was high income (>3.5) and factored into the table and graph produced (including captions and graph title).
+- The page was rendered to compare with the previous code, and code after the selected income group was chosen to ensure correctness and accuracy. 
