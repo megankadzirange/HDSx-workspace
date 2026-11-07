@@ -1,0 +1,6 @@
+- Audience: a public-health analyst preparing a short briefing on descriptive BMI patterns in the classroom NHANES equity dataset.
+- Question: Among adults aged 20- 80, how does mean BMI vary across NHANES cycles for one selected income group?
+- Control/Interaction: No control groups were included for this selected analysis. Instead, a selected group was included.
+- Visualisation: A line graph illustrating the selected income group BMI levels was included
+- Changed element: The selected income group was High Income
+- KT rationale: Providing a visualised representation of the data for  a selected income group supports descriptive analysis by income group, rather than all of them at the same time
